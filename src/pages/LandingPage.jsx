@@ -33,14 +33,13 @@ export default function LandingPage() {
         {/* Left: Intro Text */}
         <div className="flex-1 text-center md:text-left max-w-xl">
           <h1 className="text-5xl font-semibold mb-4 text-green-700">
-            Empowering Commerce with AI Intelligence
+          Empowering Travel Commerce with AI-driven Financial Concierge
           </h1>
           <p className="text-xl text-gray-600 max-w-xl mb-6">
-            Seamlessly discover, compare, and pay for products and services with the power of AI-driven agents.
+          Seamlessly discover, plan, and pay for your travel services with the power of AI-powered fintech agents.
           </p>
           <p className="text-md italic text-gray-500 mb-10">
-            "Transforming the way you shop, pay, and experience commerce—smarter, faster, and more secure."
-          </p>
+          From booking rides and managing payments to securing travel insurance and instant loans — let VoyAIge simplify your journey.</p>
           <div className="flex flex-wrap justify-center md:justify-start gap-4">
             <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Try Demo</button>
             <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition">
@@ -116,6 +115,28 @@ export default function LandingPage() {
           alt="How it works"
           className="mx-auto mt-12 max-w-5xl rounded-xl shadow-xl"
         />
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="py-20 px-6 max-w-4xl mx-auto">
+        <h2 className="text-3xl font-semibold text-center mb-10">Contact Us</h2>
+        <p className="text-center text-gray-600 mb-8">
+          Got a question, feedback, or partnership idea? Drop us a message — we’d love to hear from you!
+        </p>
+        <div className="grid md:grid-cols-3 gap-8 text-center">
+          <div>
+            <h3 className="font-semibold text-lg mb-2">📧 Email</h3>
+            <p className="text-gray-600">support@voyAIge.io</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2">📞 Phone</h3>
+            <p className="text-gray-600">+91 98765 43210</p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-2">📍 Address</h3>
+            <p className="text-gray-600">27th Floor, Grab Tower, Singapore 068914</p>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
