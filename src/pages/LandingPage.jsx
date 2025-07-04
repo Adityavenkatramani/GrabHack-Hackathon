@@ -8,6 +8,7 @@ import {
   IconCurrencyDollar,
   IconCircleCheck
 } from "@tabler/icons-react";
+import Chatbot from "../components/Chatbot";
 
 export default function LandingPage() {
   return (
@@ -27,28 +28,30 @@ export default function LandingPage() {
         <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Request Demo</button>
       </nav>
 
-      {/* Hero Section */}
-      <section className="py-24 px-6 text-center bg-gradient-to-b from-white to-green-50">
-        <h1 className="text-5xl font-semibold mb-4 text-green-700">
-          Empowering Commerce with AI Intelligence
-        </h1>
-        <p className="text-xl text-gray-600 max-w-xl mx-auto mb-6">
-          Seamlessly discover, compare, and pay for products and services with the power of AI-driven agents.
-        </p>
-        <p className="text-md italic text-gray-500 mb-10">
-          "Transforming the way you shop, pay, and experience commerce—smarter, faster, and more secure."
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Try Demo</button>
-          <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition">
-            View Architecture
-          </button>
+      {/* Hero Section: Horizontal Layout */}
+      <section className="py-24 px-6 bg-gradient-to-b from-white to-green-50 flex flex-col md:flex-row items-center justify-center gap-12">
+        {/* Left: Intro Text */}
+        <div className="flex-1 text-center md:text-left max-w-xl">
+          <h1 className="text-5xl font-semibold mb-4 text-green-700">
+            Empowering Commerce with AI Intelligence
+          </h1>
+          <p className="text-xl text-gray-600 max-w-xl mb-6">
+            Seamlessly discover, compare, and pay for products and services with the power of AI-driven agents.
+          </p>
+          <p className="text-md italic text-gray-500 mb-10">
+            "Transforming the way you shop, pay, and experience commerce—smarter, faster, and more secure."
+          </p>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4">
+            <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Try Demo</button>
+            <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition">
+              View Architecture
+            </button>
+          </div>
         </div>
-        <img
-          src="/GrabMaps.png"
-          alt="VoyAIge AI Commerce"
-          className="mx-auto mt-12 max-w-4xl rounded-xl shadow-xl"
-        />
+        {/* Right: Chatbot */}
+        <div className="flex-1 flex items-center justify-center w-full max-w-2xl">
+          <Chatbot />
+        </div>
       </section>
 
       {/* Use Cases */}
@@ -109,7 +112,7 @@ export default function LandingPage() {
           </div>
         </div>
         <img
-          src="/Grab.png"
+          src="/GrabMaps.png"
           alt="How it works"
           className="mx-auto mt-12 max-w-5xl rounded-xl shadow-xl"
         />
