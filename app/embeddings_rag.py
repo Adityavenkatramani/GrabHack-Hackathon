@@ -1,8 +1,8 @@
-import pandas as pd
-import numpy as np
-from langchain_aws import BedrockEmbeddings
-from dotenv import load_dotenv
 import os
+
+import pandas as pd
+from dotenv import load_dotenv
+from langchain_aws import BedrockEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
 
 load_dotenv()
@@ -17,14 +17,14 @@ embeddings = BedrockEmbeddings(
 )
 
 # Folder containing your 4 .parquet files
-VECTOR_DIR = "/Users/karthikeyan/Documents/MyCode/Grab/GrabHack-Hackathon/vector_embeddings"
+VECTOR_DIR = "/home/varun/projects/GrabHack-Hackathon/vector_embeddings"
 
 # List of .parquet files
 VECTORSTORES = [
     "payment_faq_vectorstore.parquet",
     "travel_cover_vectorstore.parquet",
     "travel_insurance_sbi_vectorstore.parquet",
-    "ride-cover-personal-accident_vectorstore.parquet"
+    "ride-cover-personal-accident_vectorstore.parquet",
 ]
 
 # Load all parquet files into a dictionary of DataFrames
@@ -33,9 +33,11 @@ for file in VECTORSTORES:
     path = os.path.join(VECTOR_DIR, file)
     vector_dbs[file] = pd.read_parquet(path)
 
+
 # Function to compute similarity between two vectors
 def similarity(a, b):
     return cosine_similarity([a], [b])[0][0]
+
 
 # Unified search function over all .parquet vectorstores
 def search_faq(query: str) -> str:
