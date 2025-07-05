@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { IconSend } from "@tabler/icons-react";
+import { IconSend, IconTrash } from "@tabler/icons-react";
 
 const BOT_AVATAR = "/GrabVoyaige_logo1.png";
 const USER_AVATAR =
@@ -11,6 +11,7 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
@@ -71,6 +72,37 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
     }
   };
 
+  const handleClearChat = async () => {
+    if (isClearing || isLoading) return;
+    
+    setIsClearing(true);
+    
+    try {
+      // Get user name from localStorage
+      const userName = localStorage.getItem('userName') || 'User';
+      
+      // Call the clear endpoint
+      await fetch("http://127.0.0.1:5050/clear", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          user_name: userName
+        })
+      });
+
+      // Reset messages to initial state
+      if (!propMessages) {
+        setMessages([
+          { from: "bot", text: "Hi! How can I help you today?" },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error clearing chat:", error);
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
   // Handle click on GrabPay link in bot reply
   const handleBotMessageClick = (e) => {
     if (e.target.classList.contains("grabpay-link")) {
@@ -82,19 +114,38 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
   return (
     <div className="w-full max-w-4xl min-w-[28rem] h-[44rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200 min-h-0">
       {/* Header */}
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-green-100 bg-white rounded-t-3xl">
-        <img
-          src={BOT_AVATAR}
-          alt="Bot"
-          className="w-10 h-10 rounded-full border-2 border-green-200"
-        />
-        <div>
-          <div className="font-semibold text-green-700">voyAIge Bot</div>
-          <div className="text-xs text-green-500 flex items-center gap-1">
-            <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            Online
+      <div className="flex items-center justify-between px-6 py-4 border-b border-green-100 bg-white rounded-t-3xl">
+        <div className="flex items-center gap-3">
+          <img
+            src={BOT_AVATAR}
+            alt="Bot"
+            className="w-10 h-10 rounded-full border-2 border-green-200"
+          />
+          <div>
+            <div className="font-semibold text-green-700">voyAIge Bot</div>
+            <div className="text-xs text-green-500 flex items-center gap-1">
+              <span className="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+              Online
+            </div>
           </div>
         </div>
+        
+        {/* Clear Chat Button */}
+        <button
+          onClick={handleClearChat}
+          disabled={isClearing || isLoading}
+          className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+            isClearing || isLoading
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : 'bg-red-50 text-red-600 hover:bg-red-100 hover:scale-105 focus:scale-105'
+          }`}
+          title="Clear chat history"
+        >
+          <IconTrash size={16} />
+          <span className="text-sm font-medium">
+            {isClearing ? 'Clearing...' : 'Clear Chat'}
+          </span>
+        </button>
       </div>
 
       {/* Messages */}

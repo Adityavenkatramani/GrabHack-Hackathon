@@ -100,7 +100,7 @@ async def process_message(current_state: State) -> str:
                 "voyaige": {
                     "command": "python",
                     "args": [
-                        "/home/varun/projects/GrabHack-Hackathon/app/tools_mcp.py"
+                        "C:/Users/LENOVO/GrabHackOm/voyai/app/tools_mcp.py"
                     ],
                     "transport": "stdio",
                 },

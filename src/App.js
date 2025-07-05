@@ -7,23 +7,33 @@ import ChatPage from './pages/ChatPage';
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
-    // For development: uncomment the next line to reset splash screen
-    // localStorage.removeItem('splashShown');
-    return localStorage.getItem('splashShown') !== 'true';
+    // Force splash screen to show for testing
+    localStorage.removeItem('splashShown');
+    const shouldShow = localStorage.getItem('splashShown') !== 'true';
+    console.log('Splash screen should show:', shouldShow);
+    return shouldShow;
   });
   const [splashVisible, setSplashVisible] = useState(showSplash);
 
   useEffect(() => {
+    console.log('showSplash changed to:', showSplash);
     if (showSplash) {
-      const timer = setTimeout(() => setSplashVisible(false), 3000);
+      console.log('Starting splash screen timer');
+      const timer = setTimeout(() => {
+        console.log('Setting splashVisible to false');
+        setSplashVisible(false);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [showSplash]);
 
   const handleFadeOutEnd = () => {
+    console.log('Splash fade out ended');
     setShowSplash(false);
     localStorage.setItem('splashShown', 'true');
   };
+
+  console.log('Current state - showSplash:', showSplash, 'splashVisible:', splashVisible);
 
   return (
     <Router>
