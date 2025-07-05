@@ -24,10 +24,11 @@ def home():
 async def chat():
     data = request.get_json()
     user_message = data.get("message")
-    user_name = data.get("user_name", "User")  # Get user name from frontend, default to "User"
-    
+    customer_name = data.get(
+        "user_name", "User"
+    )  # Get user name from frontend, default to "User"
+
     logger.info(f"User message: {user_message}")
-<<<<<<< Updated upstream
     logger.info(f"Customer name: {customer_name}")
 
     if customer_name not in agents_cache:
@@ -48,10 +49,6 @@ async def chat():
     agents_cache[customer_name] = last_state
     response_message = last_state["messages"][-1].content
     logger.info(f"Response message: {response_message}")
-=======
-    logger.info(f"Customer name: {user_name}")
-    response_message = await process_message(user_message, user_name)
->>>>>>> Stashed changes
 
     return jsonify({"reply": response_message})
 
