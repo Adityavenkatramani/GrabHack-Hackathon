@@ -5,52 +5,60 @@ const BOT_AVATAR = "/GrabVoyaige_logo1.png";
 const USER_AVATAR =
   "https://ui-avatars.com/api/?name=You&background=34d399&color=fff&rounded=true";
 
-export default function Chatbot() {
+export default function Chatbot({ onShowGrabPay }) {
   const [messages, setMessages] = useState([
     { from: "bot", text: "Hi! How can I help you today?" },
   ]);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, [messages]);
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
-  // ✅ This is the new async function that sends message to Flask backend
-const handleSendMessage = async () => {
-  if (input.trim() === "") return;
+  const handleSendMessage = async () => {
+    if (input.trim() === "") return;
 
-  const userMessage = input;
-  setInput(""); // Clear input
+    const userMessage = input;
+    setInput(""); // Clear input
 
-  try {
-    const response = await fetch("http://127.0.0.1:5050/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: userMessage })
-    });
+    try {
+      const response = await fetch("http://127.0.0.1:5050/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    // Add both user message and bot reply together now
-    setMessages(prevMessages => [
-      ...prevMessages,
-      { from: "user", text: userMessage },
-      { from: "bot", text: data.reply }
-    ]);
-  } catch (error) {
-    console.error("Error communicating with backend:", error);
-    setMessages(prevMessages => [
-      ...prevMessages,
-      { from: "user", text: userMessage },
-      { from: "bot", text: "Oops! Something went wrong." }
-    ]);
-  }
-};
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { from: "user", text: userMessage },
+        { from: "bot", text: data.reply }
+      ]);
+    } catch (error) {
+      console.error("Error communicating with backend:", error);
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { from: "user", text: userMessage },
+        { from: "bot", text: "Oops! Something went wrong." }
+      ]);
+    }
+  };
 
+  // Handle click on GrabPay link in bot reply
+  const handleBotMessageClick = (e) => {
+    if (e.target.classList.contains("grabpay-link")) {
+      e.preventDefault();
+      if (onShowGrabPay) onShowGrabPay();
+    }
+  };
 
   return (
-    <div className="w-full max-w-2xl h-[36rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200">
+    <div className="w-full max-w-2xl h-[36rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200 min-h-0">
       {/* Header */}
       <div className="flex items-center gap-3 px-6 py-4 border-b border-green-100 bg-white rounded-t-3xl">
         <img
@@ -68,7 +76,7 @@ const handleSendMessage = async () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-transparent">
+      <div ref={messagesContainerRef} className="flex-1 min-h-0 p-4 overflow-y-auto space-y-3 bg-transparent">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -83,16 +91,21 @@ const handleSendMessage = async () => {
                 className="w-8 h-8 rounded-full border border-green-200"
               />
             )}
-            <span
-              className={
-                msg.from === "user"
-                  ? "bg-green-100 text-green-800 px-4 py-2 rounded-2xl rounded-br-sm shadow"
-                  : "bg-white text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm border border-green-100 shadow"
-              }
-              style={{ maxWidth: "70%" }}
-            >
-              {msg.text}
-            </span>
+            {msg.from === "bot" ? (
+              <span
+                className="bg-white text-gray-800 px-4 py-2 rounded-2xl rounded-bl-sm border border-green-100 shadow"
+                style={{ maxWidth: "70%" }}
+                onClick={handleBotMessageClick}
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              />
+            ) : (
+              <span
+                className="bg-green-100 text-green-800 px-4 py-2 rounded-2xl rounded-br-sm shadow"
+                style={{ maxWidth: "70%" }}
+              >
+                {msg.text}
+              </span>
+            )}
             {msg.from === "user" && (
               <img
                 src={USER_AVATAR}
