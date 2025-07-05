@@ -144,7 +144,7 @@ async def main():
         {
             "voyaige": {
                 "command": "python",
-                "args": ["./voyaige_mcp.py"],
+                "args": ["/home/varun/projects/GrabHack-Hackathon/app/tools_mcp.py"],
                 "transport": "stdio",
             },
         },
