@@ -13,8 +13,7 @@ def chat():
     data = request.get_json()
     user_message = data.get('message')
 
-    # For now, just reply with a hardcoded link
-    response_message = '<a href="#" class="grabpay-link">GrabPay Service</a>'
+    response_message = 'Here is the link: <a href="/grabpay-service" class="grabpay-link">GrabPay Service</a>'
 
     return jsonify({"reply": response_message})
 

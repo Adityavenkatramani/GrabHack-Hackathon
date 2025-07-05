@@ -58,7 +58,7 @@ export default function Chatbot({ onShowGrabPay }) {
   };
 
   return (
-    <div className="w-full max-w-2xl h-[36rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200 min-h-0">
+    <div className="w-full max-w-4xl min-w-[28rem] h-[44rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200 min-h-0">
       {/* Header */}
       <div className="flex items-center gap-3 px-6 py-4 border-b border-green-100 bg-white rounded-t-3xl">
         <img
@@ -82,7 +82,7 @@ export default function Chatbot({ onShowGrabPay }) {
             key={idx}
             className={`flex items-end gap-2 ${
               msg.from === "user" ? "justify-end" : "justify-start"
-            } animate-fade-in`}
+            } animate-fade-in-bounce`}
           >
             {msg.from === "bot" && (
               <img
@@ -121,7 +121,7 @@ export default function Chatbot({ onShowGrabPay }) {
       {/* Input */}
       <div className="p-4 border-t border-green-100 bg-white rounded-b-3xl flex gap-2">
         <input
-          className="flex-1 border border-green-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-50"
+          className="flex-1 border border-green-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-50 transition-shadow duration-200 focus:shadow-green-200"
           type="text"
           placeholder="Type your message..."
           value={input}
@@ -131,7 +131,7 @@ export default function Chatbot({ onShowGrabPay }) {
           }}
         />
         <button
-          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow"
+          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow hover:scale-110 focus:scale-110 focus:outline-none"
           onClick={handleSendMessage}
           aria-label="Send"
         >
@@ -147,6 +147,15 @@ export default function Chatbot({ onShowGrabPay }) {
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-bounce {
+          animation: fadeInBounce 0.5s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadeInBounce {
+          0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+          60% { opacity: 1; transform: translateY(-6px) scale(1.04); }
+          80% { transform: translateY(2px) scale(0.98); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
     </div>

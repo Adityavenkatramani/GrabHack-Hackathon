@@ -21,14 +21,10 @@ export default function PayWithGrab({ open, onClose, totalAmount }) {
           <img src="/GrabPay.png" alt="GrabPay" className="w-20 h-20 rounded-full shadow border-2 border-green-200" />
           <h2 className="text-2xl font-bold text-green-700">Pay with GrabPay</h2>
           <p className="text-gray-600 text-center mb-2">Complete your payment securely with GrabPay.</p>
-          
-          {/* Total Amount Section */}
           <div className="w-full flex flex-col items-center bg-green-50 rounded-xl p-4 mb-4">
             <span className="text-gray-500 text-sm">Total Amount</span>
             <span className="text-3xl font-bold text-green-700">${totalAmount.toFixed(2)}</span>
           </div>
-
-          {/* GrabRewards Info */}
           <div className="w-full bg-blue-50 rounded-xl p-4 mb-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-blue-600 font-semibold">🎁</span>
@@ -36,24 +32,20 @@ export default function PayWithGrab({ open, onClose, totalAmount }) {
             </div>
             <p className="text-blue-600 text-sm">Get 0.5% back in points when you pay with GrabPay Wallet</p>
           </div>
-
-          {/* Action Buttons */}
           <div className="w-full flex flex-col gap-3">
             <button 
-              className="bg-green-600 text-white px-6 py-3 rounded-full shadow hover:bg-green-700 transition w-full text-lg font-semibold" 
+              className="bg-green-600 text-white px-6 py-3 rounded-full shadow hover:bg-green-700 transition w-full text-lg font-semibold"
               onClick={onClose}
             >
               Confirm & Pay
             </button>
             <button 
-              className="bg-blue-600 text-white px-6 py-3 rounded-full shadow hover:bg-blue-700 transition w-full text-lg font-semibold" 
+              className="bg-blue-600 text-white px-6 py-3 rounded-full shadow hover:bg-blue-700 transition w-full text-lg font-semibold"
               onClick={handleViewOffers}
             >
               View Offers with Grab
             </button>
           </div>
-
-          {/* Additional Info */}
           <div className="w-full text-center text-xs text-gray-500 mt-4">
             <p>Your points won't expire as long as you complete one transaction a month</p>
           </div>
@@ -61,11 +53,13 @@ export default function PayWithGrab({ open, onClose, totalAmount }) {
       </div>
       <style>{`
         .animate-fade-in-popup {
-          animation: fadeInPopup 0.4s cubic-bezier(0.4,0,0.2,1);
+          animation: fadeInPopup 0.5s cubic-bezier(0.4,0,0.2,1);
         }
         @keyframes fadeInPopup {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+          0% { opacity: 0; transform: scale(0.92) translateY(40px); }
+          60% { opacity: 1; transform: scale(1.04) translateY(-8px); }
+          80% { transform: scale(0.98) translateY(2px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
     </div>

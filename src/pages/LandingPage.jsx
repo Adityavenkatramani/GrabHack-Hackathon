@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   IconCarGarage,
   IconShoppingCart,
@@ -11,8 +11,35 @@ import {
 import Chatbot from "../components/Chatbot";
 import GrabPayPopup from "../components/GrabPayPopup";
 
-export default function LandingPage() {
+export default function LandingPage({ animateOnLoad }) {
   const [showGrabPayPopup, setShowGrabPayPopup] = useState(false);
+  const [startAnimation, setStartAnimation] = useState(false);
+  const useCasesRef = useRef(null);
+  const howItWorksRef = useRef(null);
+  const [useCasesVisible, setUseCasesVisible] = useState(false);
+  const [howItWorksVisible, setHowItWorksVisible] = useState(false);
+
+  useEffect(() => {
+    if (animateOnLoad) setStartAnimation(true);
+  }, [animateOnLoad]);
+
+  // Intersection Observer for fade-in sections
+  useEffect(() => {
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (entry.target.id === "usecases") setUseCasesVisible(true);
+            if (entry.target.id === "howitworks") setHowItWorksVisible(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    if (useCasesRef.current) observer.observe(useCasesRef.current);
+    if (howItWorksRef.current) observer.observe(howItWorksRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleShowGrabPayPopup = () => setShowGrabPayPopup(true);
 
@@ -25,18 +52,18 @@ export default function LandingPage() {
           <span className="text-2xl font-semibold text-green-600">voyAIge</span>
         </div>
         <div className="hidden md:flex gap-8 text-sm font-semibold">
-          <a href="#product" className="hover:text-green-600">Product</a>
-          <a href="#usecases" className="hover:text-green-600">Use Cases</a>
-          <a href="#howitworks" className="hover:text-green-600">How It Works</a>
-          <a href="#contact" className="hover:text-green-600">Contact</a>
+          <a href="#product" className="group relative hover:text-green-600 transition">Product<span className="nav-underline" /></a>
+          <a href="#usecases" className="group relative hover:text-green-600 transition">Use Cases<span className="nav-underline" /></a>
+          <a href="#howitworks" className="group relative hover:text-green-600 transition">How It Works<span className="nav-underline" /></a>
+          <a href="#contact" className="group relative hover:text-green-600 transition">Contact<span className="nav-underline" /></a>
         </div>
-        <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Request Demo</button>
+        <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition transform hover:scale-105">Request Demo</button>
       </nav>
 
-      {/* Hero Section: Horizontal Layout */}
-      <section className="px-6 bg-gradient-to-b from-white to-green-50 flex flex-col md:flex-row items-stretch justify-center gap-12 animate-hero-fade-in h-[36rem] min-h-0 overflow-hidden">
+      {/* Hero Section: Centered Layout */}
+      <section className={`px-6 animated-gradient flex flex-col md:flex-row items-center justify-center gap-12 min-h-[calc(100vh-88px)] min-h-0 overflow-hidden ${startAnimation ? 'animate-hero-fade-in' : ''}`}>
         {/* Left: Intro Text */}
-        <div className="flex-1 text-center md:text-left max-w-xl animate-slide-up">
+        <div className={`max-w-xl w-full text-center mx-auto ${startAnimation ? 'animate-slide-up' : ''}`}>
           <h1 className="text-5xl font-semibold mb-4 text-green-700">
           Empowering Travel Commerce with AI-driven Financial Concierge
           </h1>
@@ -45,44 +72,44 @@ export default function LandingPage() {
           </p>
           <p className="text-md italic text-gray-500 mb-10">
           From booking rides and managing payments to securing travel insurance and instant loans — let VoyAIge simplify your journey.</p>
-          <div className="flex flex-wrap justify-center md:justify-start gap-4">
-            <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition">Try Demo</button>
-            <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition">
+          <div className="flex flex-wrap justify-center gap-4">
+            <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition transform hover:scale-105">Try Demo</button>
+            <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition transform hover:scale-105">
               View Architecture
             </button>
           </div>
         </div>
         {/* Right: Chatbot */}
-        <div className="flex-1 flex items-center justify-center w-full max-w-2xl animate-slide-up-delay h-full min-h-0">
+        <div className={`flex items-center justify-center w-full max-w-2xl mx-auto h-full min-h-0 ${startAnimation ? 'animate-slide-up-delay' : ''}`}>
           <Chatbot onShowGrabPay={handleShowGrabPayPopup} />
         </div>
       </section>
 
       {/* Use Cases */}
-      <section id="usecases" className="py-20 px-6 max-w-6xl mx-auto">
+      <section id="usecases" ref={useCasesRef} className={`py-20 px-6 max-w-6xl mx-auto transition-opacity duration-700 ${useCasesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <h2 className="text-3xl font-semibold mb-10 text-center">Use Cases</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-          <div className="bg-white rounded-lg shadow p-6 text-center animate-stagger-1">
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-1' : ''}`}>
             <img src="/Flight Booking.png" alt="Flight Booking" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Flight Booking</h3>
             <p>Effortlessly search, compare, and book flights with AI-powered recommendations for the best routes and prices.</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center animate-stagger-2">
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-2' : ''}`}>
             <img src="/Insurance Buying.png" alt="Insurance Buying" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Insurance Buying</h3>
             <p>Instantly discover and purchase the most suitable insurance plans, tailored to your needs by our intelligent agent.</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center animate-stagger-3">
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-3' : ''}`}>
             <img src="/Loan Eligibility.png" alt="Loan Eligibility" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Loan Eligibility</h3>
             <p>Check your eligibility and get personalized loan offers in seconds, with transparent terms and instant approval.</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center animate-stagger-4">
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-4' : ''}`}>
             <img src="/PayLater.png" alt="PayLater" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">PayLater</h3>
             <p>Shop now and pay later with flexible, AI-matched payment plans that fit your lifestyle and budget.</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center animate-stagger-5">
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-5' : ''}`}>
             <img src="/Airport ride booking.png" alt="Airport Ride Booking" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Airport Ride Booking</h3>
             <p>Book airport rides seamlessly, with real-time fare comparisons and instant confirmations powered by AI.</p>
@@ -91,26 +118,26 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section id="howitworks" className="py-20 bg-green-50 px-6">
+      <section id="howitworks" ref={howItWorksRef} className={`py-20 bg-green-50 px-6 transition-opacity duration-700 ${howItWorksVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <h2 className="text-3xl font-semibold text-center mb-10">How It Works</h2>
         <div className="grid md:grid-cols-5 gap-4 text-center">
-          <div className="animate-stagger-1">
+          <div className={startAnimation ? 'animate-stagger-1' : ''}>
             <IconSearch className="w-8 h-8 mx-auto text-green-600 mb-2" />
             <p>Search Intent<br/><span className='text-xs text-gray-500'>Users express what they need—our AI understands and refines their intent.</span></p>
           </div>
-          <div className="animate-stagger-2">
+          <div className={startAnimation ? 'animate-stagger-2' : ''}>
             <IconRobot className="w-8 h-8 mx-auto text-green-600 mb-2" />
             <p>AI Agent + MCP<br/><span className='text-xs text-gray-500'>Our intelligent agent leverages the Model Context Protocol (MCP) to find the best options.</span></p>
           </div>
-          <div className="animate-stagger-3">
+          <div className={startAnimation ? 'animate-stagger-3' : ''}>
             <IconDeviceAnalytics className="w-8 h-8 mx-auto text-green-600 mb-2" />
             <p>Compare Products<br/><span className='text-xs text-gray-500'>Instantly compare products, services, and financing options tailored to user needs.</span></p>
           </div>
-          <div className="animate-stagger-4">
+          <div className={startAnimation ? 'animate-stagger-4' : ''}>
             <IconCurrencyDollar className="w-8 h-8 mx-auto text-green-600 mb-2" />
             <p>Choose Financing<br/><span className='text-xs text-gray-500'>Select from flexible payment methods, including BNPL, cash advance, and more.</span></p>
           </div>
-          <div className="animate-stagger-5">
+          <div className={startAnimation ? 'animate-stagger-5' : ''}>
             <IconCircleCheck className="w-8 h-8 mx-auto text-green-600 mb-2" />
             <p>Checkout<br/><span className='text-xs text-gray-500'>Complete purchases securely and effortlessly, all within a unified experience.</span></p>
           </div>
@@ -177,6 +204,28 @@ export default function LandingPage() {
         @keyframes fadeInStagger {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        .animated-gradient {
+          background: linear-gradient(120deg, #f0fdf4, #d1fae5, #f0fdf4, #bbf7d0);
+          background-size: 200% 200%;
+          animation: gradientMove 8s ease-in-out infinite alternate;
+        }
+        @keyframes gradientMove {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 100% 50%; }
+        }
+        .nav-underline {
+          display: block;
+          position: absolute;
+          left: 0; right: 0; bottom: -2px;
+          height: 2px;
+          background: linear-gradient(90deg, #22c55e, #16a34a);
+          border-radius: 2px;
+          width: 0%;
+          transition: width 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        .group:hover .nav-underline {
+          width: 100%;
         }
       `}</style>
     </div>
