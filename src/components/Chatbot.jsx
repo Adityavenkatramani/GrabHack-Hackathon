@@ -5,8 +5,8 @@ const BOT_AVATAR = "/GrabVoyaige_logo1.png";
 const USER_AVATAR =
   "https://ui-avatars.com/api/?name=You&background=34d399&color=fff&rounded=true";
 
-export default function Chatbot({ onShowGrabPay }) {
-  const [messages, setMessages] = useState([
+export default function Chatbot({ onShowGrabPay, messages: propMessages, disableInput, userIcon }) {
+  const [messages, setMessages] = useState(propMessages || [
     { from: "bot", text: "Hi! How can I help you today?" },
   ]);
   const [input, setInput] = useState("");
@@ -17,7 +17,9 @@ export default function Chatbot({ onShowGrabPay }) {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, propMessages]);
+
+  const displayMessages = propMessages || messages;
 
   const handleSendMessage = async () => {
     if (input.trim() === "") return;
@@ -34,18 +36,22 @@ export default function Chatbot({ onShowGrabPay }) {
 
       const data = await response.json();
 
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { from: "user", text: userMessage },
-        { from: "bot", text: data.reply }
-      ]);
+      if (!propMessages) {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { from: "user", text: userMessage },
+          { from: "bot", text: data.reply }
+        ]);
+      }
     } catch (error) {
       console.error("Error communicating with backend:", error);
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { from: "user", text: userMessage },
-        { from: "bot", text: "Oops! Something went wrong." }
-      ]);
+      if (!propMessages) {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { from: "user", text: userMessage },
+          { from: "bot", text: "Oops! Something went wrong." }
+        ]);
+      }
     }
   };
 
@@ -77,7 +83,7 @@ export default function Chatbot({ onShowGrabPay }) {
 
       {/* Messages */}
       <div ref={messagesContainerRef} className="flex-1 min-h-0 p-4 overflow-y-auto space-y-3 bg-transparent">
-        {messages.map((msg, idx) => (
+        {displayMessages.map((msg, idx) => (
           <div
             key={idx}
             className={`flex items-end gap-2 ${
@@ -107,11 +113,15 @@ export default function Chatbot({ onShowGrabPay }) {
               </span>
             )}
             {msg.from === "user" && (
-              <img
-                src={USER_AVATAR}
-                alt="You"
-                className="w-8 h-8 rounded-full border border-green-200"
-              />
+              userIcon ? (
+                <span>{userIcon}</span>
+              ) : (
+                <img
+                  src={USER_AVATAR}
+                  alt="You"
+                  className="w-8 h-8 rounded-full border border-green-200"
+                />
+              )
             )}
           </div>
         ))}
@@ -119,25 +129,27 @@ export default function Chatbot({ onShowGrabPay }) {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-green-100 bg-white rounded-b-3xl flex gap-2">
-        <input
-          className="flex-1 border border-green-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-50 transition-shadow duration-200 focus:shadow-green-200"
-          type="text"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSendMessage();
-          }}
-        />
-        <button
-          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow hover:scale-110 focus:scale-110 focus:outline-none"
-          onClick={handleSendMessage}
-          aria-label="Send"
-        >
-          <IconSend size={22} />
-        </button>
-      </div>
+      {!disableInput && (
+        <div className="p-4 border-t border-green-100 bg-white rounded-b-3xl flex gap-2">
+          <input
+            className="flex-1 border border-green-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-50 transition-shadow duration-200 focus:shadow-green-200"
+            type="text"
+            placeholder="Type your message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSendMessage();
+            }}
+          />
+          <button
+            className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow hover:scale-110 focus:scale-110 focus:outline-none"
+            onClick={handleSendMessage}
+            aria-label="Send"
+          >
+            <IconSend size={22} />
+          </button>
+        </div>
+      )}
 
       {/* Animations */}
       <style>{`

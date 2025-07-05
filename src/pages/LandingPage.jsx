@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   IconCarGarage,
   IconShoppingCart,
@@ -11,6 +12,16 @@ import {
 import Chatbot from "../components/Chatbot";
 import GrabPayPopup from "../components/GrabPayPopup";
 
+const SIMULATED_MESSAGES = [
+  { from: "bot", text: "Hi!" },
+  { from: "user", text: "Hello! What can you do?" },
+  { from: "bot", text: "How can I help you today?" },
+  { from: "user", text: "Can you help me book a ride to the airport?" },
+  { from: "bot", text: "Absolutely! I can help you book rides, get travel insurance, or check loan eligibility." },
+  { from: "user", text: "That's awesome! How do I get started?" },
+  { from: "bot", text: "Just type your request or click 'Login to Continue' to use all features." },
+];
+
 export default function LandingPage({ animateOnLoad }) {
   const [showGrabPayPopup, setShowGrabPayPopup] = useState(false);
   const [startAnimation, setStartAnimation] = useState(false);
@@ -18,10 +29,24 @@ export default function LandingPage({ animateOnLoad }) {
   const howItWorksRef = useRef(null);
   const [useCasesVisible, setUseCasesVisible] = useState(false);
   const [howItWorksVisible, setHowItWorksVisible] = useState(false);
+  const [simMessages, setSimMessages] = useState([SIMULATED_MESSAGES[0]]);
+  const [simStep, setSimStep] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (animateOnLoad) setStartAnimation(true);
   }, [animateOnLoad]);
+
+  // Simulate chat messages
+  useEffect(() => {
+    if (simStep < SIMULATED_MESSAGES.length) {
+      const timer = setTimeout(() => {
+        setSimMessages((msgs) => [...msgs, SIMULATED_MESSAGES[simStep]]);
+        setSimStep((s) => s + 1);
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [simStep]);
 
   // Intersection Observer for fade-in sections
   useEffect(() => {
@@ -73,7 +98,12 @@ export default function LandingPage({ animateOnLoad }) {
           <p className="text-md italic text-gray-500 mb-10">
           From booking rides and managing payments to securing travel insurance and instant loans — let VoyAIge simplify your journey.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition transform hover:scale-105">Try Demo</button>
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition transform hover:scale-105"
+              onClick={() => navigate('/login')}
+            >
+              Login to Continue
+            </button>
             <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition transform hover:scale-105">
               View Architecture
             </button>
@@ -81,7 +111,7 @@ export default function LandingPage({ animateOnLoad }) {
         </div>
         {/* Right: Chatbot */}
         <div className={`flex items-center justify-center w-full max-w-2xl mx-auto h-full min-h-0 ${startAnimation ? 'animate-slide-up-delay' : ''}`}>
-          <Chatbot onShowGrabPay={handleShowGrabPayPopup} />
+          <Chatbot messages={simMessages} disableInput />
         </div>
       </section>
 
