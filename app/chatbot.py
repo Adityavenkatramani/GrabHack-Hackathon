@@ -1,13 +1,10 @@
-import asyncio
 import logging
 import os
 from typing import Annotated, TypedDict
 
 from dotenv import load_dotenv
 from langchain_aws import ChatBedrockConverse
-from langchain_core.messages import HumanMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -90,14 +87,10 @@ async def create_voyaige_agent(tools):
     )
     graph_builder.add_edge("tools", "chatbot")
     graph_builder.set_entry_point("chatbot")
-    checkpointer = InMemorySaver()
-    return graph_builder.compile(checkpointer=checkpointer)
+    return graph_builder.compile()
 
 
-async def process_message(
-    user_input: str,
-    customer_name: str,
-) -> str:
+async def process_message(current_state: State) -> str:
     """Process a single message from a user."""
     try:
         logger.info("=== Starting message processing ===")
@@ -116,50 +109,17 @@ async def process_message(
         mcp_tools = await client.get_tools()
         agent = await create_voyaige_agent(mcp_tools)
 
-        system_prompt = (
-            SYSTEM_PROMPT + f"\n\nThe customer's full name is {customer_name}."
-        )
-        initial_messages = [{"role": "system", "content": system_prompt}]
-        thread_id = f"{customer_name}"
-        config = {"configurable": {"thread_id": thread_id}}
-
-        logger.info(f"Using thread ID: {thread_id}")
-
-        events = agent.astream(
-            {"messages": [*initial_messages, HumanMessage(content=user_input)]},
-            config,
+        event = agent.astream(
+            current_state,
+            config={"recursion_limit": 100},
             stream_mode="values",
         )
 
-        last_message = None
-        async for event in events:
-            last_message = event["messages"][-1]
+        async for state_update in event:
+            last_state = state_update
 
-        if last_message:
-            logger.info("Response content")
-            return last_message.content
-        logger.error("No response from agent")
-        return "I'm sorry, I wasn't able to process your request."
+        return last_state
 
     except Exception as e:
         logger.error(f"Unexpected error in process_message: {e!s}", exc_info=True)
         raise
-
-
-async def main():
-    """Main async function to run the chatbot."""
-    response = await process_message(
-        user_input="I want to book a flight to new york from los angeles for 2 people starting from july 10th and ending on july 10th",
-        customer_name="John Doe",
-    )
-    print(f"Final response:\n{response}")
-    print("\n---\n")
-    response = await process_message(
-        user_input="yes, i want it on the same day trip",
-        customer_name="John Doe",
-    )
-    print(f"Final response:\n{response}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
