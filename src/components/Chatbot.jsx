@@ -10,6 +10,7 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
     { from: "bot", text: "Hi! How can I help you today?" },
   ]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
@@ -22,16 +23,31 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
   const displayMessages = propMessages || messages;
 
   const handleSendMessage = async () => {
-    if (input.trim() === "") return;
+    if (input.trim() === "" || isLoading) return;
 
     const userMessage = input;
     setInput(""); // Clear input
+    setIsLoading(true); // Start loading
+
+    // Add user message immediately
+    if (!propMessages) {
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { from: "user", text: userMessage }
+      ]);
+    }
 
     try {
+      // Get user name from localStorage
+      const userName = localStorage.getItem('userName') || 'User';
+      
       const response = await fetch("http://127.0.0.1:5050/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage })
+        body: JSON.stringify({ 
+          message: userMessage,
+          user_name: userName // Pass user name to Flask app
+        })
       });
 
       const data = await response.json();
@@ -39,7 +55,6 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
       if (!propMessages) {
         setMessages(prevMessages => [
           ...prevMessages,
-          { from: "user", text: userMessage },
           { from: "bot", text: data.reply }
         ]);
       }
@@ -48,10 +63,11 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
       if (!propMessages) {
         setMessages(prevMessages => [
           ...prevMessages,
-          { from: "user", text: userMessage },
           { from: "bot", text: "Oops! Something went wrong." }
         ]);
       }
+    } finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -125,6 +141,25 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
             )}
           </div>
         ))}
+        
+        {/* Loading animation */}
+        {isLoading && (
+          <div className="flex items-end gap-2 justify-start animate-fade-in-bounce">
+            <img
+              src={BOT_AVATAR}
+              alt="Bot"
+              className="w-8 h-8 rounded-full border border-green-200"
+            />
+            <div className="bg-white px-4 py-2 rounded-2xl rounded-bl-sm border border-green-100 shadow">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div ref={messagesEndRef} />
       </div>
 
@@ -134,16 +169,22 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
           <input
             className="flex-1 border border-green-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-50 transition-shadow duration-200 focus:shadow-green-200"
             type="text"
-            placeholder="Type your message..."
+            placeholder={isLoading ? "Bot is typing..." : "Type your message..."}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") handleSendMessage();
+              if (e.key === "Enter" && !isLoading) handleSendMessage();
             }}
+            disabled={isLoading}
           />
           <button
-            className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow hover:scale-110 focus:scale-110 focus:outline-none"
+            className={`px-4 py-2 rounded-full flex items-center justify-center transition shadow focus:outline-none ${
+              isLoading 
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                : 'bg-green-600 text-white hover:bg-green-700 hover:scale-110 focus:scale-110'
+            }`}
             onClick={handleSendMessage}
+            disabled={isLoading}
             aria-label="Send"
           >
             <IconSend size={22} />

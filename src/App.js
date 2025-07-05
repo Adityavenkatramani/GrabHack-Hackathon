@@ -7,6 +7,8 @@ import ChatPage from './pages/ChatPage';
 
 function App() {
   const [showSplash, setShowSplash] = useState(() => {
+    // For development: uncomment the next line to reset splash screen
+    // localStorage.removeItem('splashShown');
     return localStorage.getItem('splashShown') !== 'true';
   });
   const [splashVisible, setSplashVisible] = useState(showSplash);
@@ -28,7 +30,7 @@ function App() {
       {showSplash && (
         <SplashScreen visible={splashVisible} onFadeOutEnd={handleFadeOutEnd} />
       )}
-      <div className={showSplash ? "opacity-0 pointer-events-none" : "opacity-100 transition-opacity duration-700"}>
+      <div className={`transition-opacity duration-700 ${showSplash ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/chat" element={<ChatPage />} />

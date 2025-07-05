@@ -1,22 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthPopup from "../components/AuthPopup";
 
 const LANDING_URL = window.location.origin + "/";
 
 export default function LoginPage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginMethod, setLoginMethod] = useState("");
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = (method) => {
     setLoginMethod(method);
-    setTimeout(() => {
-      if (method === "grab") {
-        navigate("/chat");
-      } else {
+    if (method === "grab") {
+      setShowAuthPopup(true);
+    } else {
+      setTimeout(() => {
         setLoggedIn(true);
-      }
-    }, 800); // Simulate login delay
+      }, 800); // Simulate login delay
+    }
+  };
+
+  const handleAuthenticated = (userName) => {
+    // Store user name in localStorage or state management for use in Flask app
+    localStorage.setItem('userName', userName);
+    navigate("/chat");
   };
 
   if (loggedIn) {
@@ -34,21 +42,18 @@ export default function LoginPage() {
             className="flex items-center justify-center gap-3 bg-green-600 text-white px-6 py-3 rounded-full shadow hover:bg-green-700 transition text-lg font-semibold"
             onClick={() => handleLogin("grab")}
           >
-
             Continue with Grab
           </button>
           <button
             className="flex items-center justify-center gap-3 bg-white border border-gray-300 text-gray-800 px-6 py-3 rounded-full shadow hover:bg-gray-100 transition text-lg font-semibold"
             onClick={() => handleLogin("google")}
           >
-
             Continue with Google
           </button>
           <button
             className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3 rounded-full shadow hover:bg-gray-900 transition text-lg font-semibold"
             onClick={() => handleLogin("apple")}
           >
-
             Continue with Apple ID
           </button>
         </div>
@@ -64,6 +69,12 @@ export default function LoginPage() {
           <span className="text-xs text-gray-400">Scan this QR code to open voyAIge on your mobile device</span>
         </div>
       </div>
+
+      <AuthPopup 
+        isOpen={showAuthPopup}
+        onClose={() => setShowAuthPopup(false)}
+        onAuthenticated={handleAuthenticated}
+      />
     </div>
   );
 } 
