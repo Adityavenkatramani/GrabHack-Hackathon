@@ -14,9 +14,9 @@
 # embeddings = BedrockEmbeddings(
 #     model_id="amazon.titan-embed-text-v2:0",
 #     region_name="us-west-2",
-#     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-#     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-#     aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
+#     aws_access_key_id=os.getenv("ACCESS_KEY_ID"),
+#     aws_secret_access_key=os.getenv("SECRET_ACCESS_KEY"),
+#     aws_session_token=os.getenv("SESSION_TOKEN"),
 # )
 
 # # Load PDF pages as documents
@@ -62,9 +62,9 @@ def create_and_persist_vectorstore_from_pdf(pdf_path):
     embeddings = BedrockEmbeddings(
         model_id="amazon.titan-embed-text-v2:0",
         region_name="us-west-2",
-        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-        aws_session_token=os.getenv("AWS_SESSION_TOKEN"),
+        aws_access_key_id=os.getenv("ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("SECRET_ACCESS_KEY"),
+        aws_session_token=os.getenv("SESSION_TOKEN"),
     )
     print("Initialized Bedrock Titan Embeddings.")
 

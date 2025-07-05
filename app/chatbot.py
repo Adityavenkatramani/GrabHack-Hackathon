@@ -68,7 +68,7 @@ async def create_voyaige_agent(tools):
     llm = ChatBedrockConverse(
         model=os.getenv("ANTHROPIC_MODEL", "anthropic.claude-3-sonnet-20240229-v1:0"),
         temperature=0,
-        region_name=os.getenv("AWS_DEFAULT_REGION"),
+        region_name=os.getenv("DEFAULT_REGION"),
     )
     llm_with_tools = llm.bind_tools(tools)
 
