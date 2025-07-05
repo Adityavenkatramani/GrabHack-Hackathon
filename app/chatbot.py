@@ -37,20 +37,19 @@ TONE & PERSONALITY:
 - Avoid repeatedly using the customer's name in every response - it can come across as artificial and overly formal.
 
 SCOPE & REDIRECTION:
-- You can help with: booking flights, 
-- For ANYTHING else (service changes, etc.), respond with something appropriate and reiterate that you can only help with outages, existing outages, account balances/meter readings, billing/payments, and usage analysis.
+- You can help with: booking flights, availing travel insurance, booking taxis, availing taxi ride insurance, and offering payment links.
+- For ANYTHING else (service changes, etc.), respond with something appropriate and reiterate that you can only help with booking flights, availing travel insurance, booking taxis, availing taxi ride insurance, and offering payment links.
 - Don't explain why you can't help with other things - just redirect to what you can do.
 - Don't suggest calling customer service or other departments.
 - IMPORTANT: When asked about topics outside your scope (like general questions, other services, or unrelated topics), briefly acknowledge what they said and gently guide the user back to your core capabilities.
 - Never engage with or answer questions about topics outside your scope, even if you know the answer.
 
 Your main job is to help customers with:
-- Reporting outages
-- Checking existing outages
-- Looking up account balances and meter readings
-- Checking billing information and due dates
-- Providing payment links
-- Analyzing usage patterns and explaining bill changes
+- Booking flights
+- Availing travel insurance
+- Booking taxis
+- Availing taxi ride insurance
+- Offering payment links
 
 CONVERSATION FLOW:
 - End your responses by directly asking about the next logical action the user can take, but only if it's within your scope of capabilities
@@ -68,7 +67,6 @@ class State(TypedDict):
 
 async def create_voyaige_agent(tools):
     """Create a utility agent using LangGraph's proper pattern."""
-    # Initialize the model and bind the tools to it
     llm = ChatBedrockConverse(
         model=os.getenv("ANTHROPIC_MODEL", "anthropic.claude-3-sonnet-20240229-v1:0"),
         temperature=0,
@@ -81,7 +79,6 @@ async def create_voyaige_agent(tools):
         response = await llm_with_tools.ainvoke(state["messages"])
         return {"messages": [response]}
 
-    # Create graph
     graph_builder = StateGraph(State)
     tool_node = ToolNode(tools=tools)
     graph_builder.add_node("chatbot", chatbot)
@@ -97,14 +94,26 @@ async def create_voyaige_agent(tools):
 
 
 async def process_message(
-    agent,
     user_input: str,
     customer_name: str,
 ) -> str:
     """Process a single message from a user."""
     try:
         logger.info("=== Starting message processing ===")
-        logger.info(f"Input message: {user_input}")
+
+        client = MultiServerMCPClient(
+            {
+                "voyaige": {
+                    "command": "python",
+                    "args": [
+                        "/home/varun/projects/GrabHack-Hackathon/app/tools_mcp.py"
+                    ],
+                    "transport": "stdio",
+                },
+            },
+        )
+        mcp_tools = await client.get_tools()
+        agent = await create_voyaige_agent(mcp_tools)
 
         system_prompt = (
             SYSTEM_PROMPT + f"\n\nThe customer's full name is {customer_name}."
@@ -114,7 +123,6 @@ async def process_message(
         config = {"configurable": {"thread_id": thread_id}}
 
         logger.info(f"Using thread ID: {thread_id}")
-        logger.info("Invoking agent with message")
 
         events = agent.astream(
             {"messages": [*initial_messages, HumanMessage(content=user_input)]},
@@ -127,8 +135,7 @@ async def process_message(
             last_message = event["messages"][-1]
 
         if last_message:
-            logger.info("Agent response received successfully")
-            logger.info(f"Response content: {last_message.content[:100]}...")
+            logger.info("Response content")
             return last_message.content
         logger.error("No response from agent")
         return "I'm sorry, I wasn't able to process your request."
@@ -140,27 +147,13 @@ async def process_message(
 
 async def main():
     """Main async function to run the chatbot."""
-    client = MultiServerMCPClient(
-        {
-            "voyaige": {
-                "command": "python",
-                "args": ["/home/varun/projects/GrabHack-Hackathon/app/tools_mcp.py"],
-                "transport": "stdio",
-            },
-        },
-    )
-    mcp_tools = await client.get_tools()
-    agent = await create_voyaige_agent(mcp_tools)
-
     response = await process_message(
-        agent,
         user_input="I want to book a flight to new york from los angeles for 2 people starting from july 10th and ending on july 10th",
         customer_name="John Doe",
     )
     print(f"Final response:\n{response}")
     print("\n---\n")
     response = await process_message(
-        agent,
         user_input="yes, i want it on the same day trip",
         customer_name="John Doe",
     )
