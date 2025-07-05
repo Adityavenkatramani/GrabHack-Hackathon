@@ -97,15 +97,12 @@ export default function LandingPage({ animateOnLoad }) {
           </p>
           <p className="text-md italic text-gray-500 mb-10">
           From booking rides and managing payments to securing travel insurance and instant loans — let VoyAIge simplify your journey.</p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex justify-center">
             <button
-              className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-green-700 transition transform hover:scale-105"
+              className="bg-green-600 text-white px-8 py-3 rounded-lg shadow-lg hover:bg-green-700 transition transform hover:scale-105 text-lg font-semibold"
               onClick={() => navigate('/login')}
             >
               Login to Continue
-            </button>
-            <button className="border border-green-600 text-green-600 px-4 py-2 rounded-md hover:bg-green-100 transition transform hover:scale-105">
-              View Architecture
             </button>
           </div>
         </div>
@@ -118,7 +115,7 @@ export default function LandingPage({ animateOnLoad }) {
       {/* Use Cases */}
       <section id="usecases" ref={useCasesRef} className={`py-20 px-6 max-w-6xl mx-auto transition-opacity duration-700 ${useCasesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <h2 className="text-3xl font-semibold mb-10 text-center">Use Cases</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-1' : ''}`}>
             <img src="/Flight Booking.png" alt="Flight Booking" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Flight Booking</h3>
@@ -130,16 +127,11 @@ export default function LandingPage({ animateOnLoad }) {
             <p>Instantly discover and purchase the most suitable insurance plans, tailored to your needs by our intelligent agent.</p>
           </div>
           <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-3' : ''}`}>
-            <img src="/Loan Eligibility.png" alt="Loan Eligibility" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
-            <h3 className="font-semibold text-lg mb-2">Loan Eligibility</h3>
-            <p>Check your eligibility and get personalized loan offers in seconds, with transparent terms and instant approval.</p>
-          </div>
-          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-4' : ''}`}>
             <img src="/PayLater.png" alt="PayLater" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">PayLater</h3>
             <p>Shop now and pay later with flexible, AI-matched payment plans that fit your lifestyle and budget.</p>
           </div>
-          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-5' : ''}`}>
+          <div className={`bg-white rounded-lg shadow p-6 text-center ${startAnimation ? 'animate-stagger-4' : ''}`}>
             <img src="/Airport ride booking.png" alt="Airport Ride Booking" className="w-20 h-20 mx-auto mb-4 rounded-md object-cover" />
             <h3 className="font-semibold text-lg mb-2">Airport Ride Booking</h3>
             <p>Book airport rides seamlessly, with real-time fare comparisons and instant confirmations powered by AI.</p>

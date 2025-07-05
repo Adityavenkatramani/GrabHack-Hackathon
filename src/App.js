@@ -22,7 +22,7 @@ function App() {
       const timer = setTimeout(() => {
         console.log('Setting splashVisible to false');
         setSplashVisible(false);
-      }, 3000);
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [showSplash]);
@@ -40,7 +40,7 @@ function App() {
       {showSplash && (
         <SplashScreen visible={splashVisible} onFadeOutEnd={handleFadeOutEnd} />
       )}
-      <div className={`transition-opacity duration-700 ${showSplash ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+      <div className={`transition-opacity duration-400 ${showSplash ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/chat" element={<ChatPage />} />

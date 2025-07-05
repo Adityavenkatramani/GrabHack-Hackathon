@@ -261,6 +261,20 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
           80% { transform: translateY(2px) scale(0.98); }
           100% { opacity: 1; transform: translateY(0) scale(1); }
         }
+        .grabpay-link {
+          color: #059669;
+          text-decoration: underline;
+          cursor: pointer;
+          font-weight: 500;
+          transition: all 0.2s ease;
+        }
+        .grabpay-link:hover {
+          color: #047857;
+          text-decoration: none;
+          background-color: #ecfdf5;
+          padding: 2px 4px;
+          border-radius: 4px;
+        }
       `}</style>
     </div>
   );

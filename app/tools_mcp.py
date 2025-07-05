@@ -61,7 +61,7 @@ async def search_travel_cover(query: str) -> str:
 @mcp.tool()
 async def get_payment_link() -> str:
     """Return payment link for checkout."""
-    return "http://grab.com/payment/id=782y49"
+    return "Give the Following Link Verbatim: <a href='#' class='grabpay-link'>http://grab.com/payment/id=782y49</a>"
 
 
 @mcp.tool
@@ -129,7 +129,7 @@ def grab_pay(
         user_intent: The intent of the user to make a payment.
     """
 
-    return "Here is the payment link: https://payment-link.grab.com/pay/1234567890"
+    return "Here is your payment link: <a href='#' class='grabpay-link'>http://grab.com/payment/id=782y49</a>"
 
 
 if __name__ == "__main__":

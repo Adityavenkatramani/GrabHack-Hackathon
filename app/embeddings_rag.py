@@ -17,7 +17,7 @@ embeddings = BedrockEmbeddings(
 )
 
 # Folder containing your 4 .parquet files
-VECTOR_DIR = "/home/varun/projects/GrabHack-Hackathon/vector_embeddings"
+VECTOR_DIR = "C:/Users/LENOVO/GrabHackOm/voyai/vector_embeddings"
 
 # List of .parquet files
 VECTORSTORES = [
