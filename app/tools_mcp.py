@@ -1,4 +1,5 @@
 # server.py
+from embeddings_rag import search_faq
 from fastmcp import FastMCP
 
 mcp = FastMCP("Voyaige")
@@ -34,6 +35,30 @@ def book_flight(
 
     return f"Booked a flight to {destination} for {number_of_passengers} passengers on {departure_date}."
 
+@mcp.tool()
+async def search_payment_faq(query: str) -> str:
+    """Search through SBI Knowledge base"""
+    return search_faq(query)
+
+@mcp.tool()
+async def search_ride_cover_personal_accident(query: str) -> str:
+    """Search through Ride cover for personal accidents"""
+    return search_faq(query)
+
+@mcp.tool()
+async def search_travel_cover(query: str) -> str:
+    """Official policy document for Chubb Travel Cover insurance (Nov 2021). 
+Used by the MCP tool to extract coverage details, interpret user insurance queries,
+ and recommend relevant travel protection options like trip cancellation, medical,
+   or COVID-19 cover during booking workflows.
+"""
+    return search_faq(query)
+
+
+@mcp.tool()
+async def get_payment_link() -> str:
+    """Return payment link for checkout."""
+    return "http://localhost:3000/payment"
 
 @mcp.tool
 def travel_cover(
