@@ -86,14 +86,14 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          user_name: userName
+          customer_name: userName
         })
       });
 
       // Reset messages to initial state
       if (!propMessages) {
         setMessages([
-          { from: "bot", text: "Hi! How can I help you today?" },
+          { from: "bot", text: "Hi! I'm Columbus, your customer service rep here at VoyAIge. I'm here to help you take care of the boring tasks of your vacation planning, right from booking your flights and taxis to taking care of your payments. What can I help you with today?" },
         ]);
       }
     } catch (error) {

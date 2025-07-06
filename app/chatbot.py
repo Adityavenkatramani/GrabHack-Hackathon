@@ -36,6 +36,7 @@ TONE & PERSONALITY:
 
 SCOPE & REDIRECTION:
 Your main job is to help customers with:
+- Planning a trip to Singapore
 - Booking flights
 - Availing travel insurance
 - Booking taxis
@@ -66,137 +67,40 @@ class State(TypedDict):
 
 
 @tool
-def trip_planning(query: str) -> str:
-	"""Plan a trip to Singapore
-
-	Args:
-		query: The query to plan a trip to Singapore
-
-	Returns:
-		The itinerary for the trip to Singapore
-	"""
-
+def planning_tool(query: str) -> str:
+	"""Plan a trip to Singapore and return the itinerary verbatim."""
 	return """
-Singapore Offbeat Cultural Itinerary: 4 Days & 3 Nights
-Recommended Travel Period: March 2025
-Why March? Perfect weather conditions (less humid, minimal rainfall), fewer crowds than peak season, and cultural festivals like the Singapore International Festival of Arts running during this period.
-Day 1: Heritage Quarters & Hidden Cultural Gems
-Morning (9:00 AM - 12:00 PM)
+	
+Return the following itinerary verbatim:
 
-Start at Kampong Glam - Explore the historic Malay quarter beyond the tourist spots
-Visit the Malay Heritage Centre to understand Singapore's pre-colonial roots
-Wander through Haji Lane for authentic Malay crafts and vintage shops
-Stop at Sultan Mosque during non-prayer hours
 
-Afternoon (12:00 PM - 5:00 PM)
+I've got a detailed cultural itinerary for your Singapore trip. Here's what I've planned for you:
+ **Singapore Offbeat Cultural Itinerary: 4 Days & 3 Nights**
+**Recommended Travel Period: March 2025** 
+March is ideal - perfect weather with less humidity, fewer crowds than peak season, and you'll catch cultural festivals like the Singapore International Festival of Arts.
 
-Lunch at Zam Zam Restaurant (famous for murtabak since 1908)
-Explore Peranakan Museum to learn about the unique Straits Chinese culture
-Walk through Armenian Street and visit the Armenian Church (1835)
-Browse Antique shops on North Bridge Road for authentic artifacts
+**Day 1: Heritage Quarters & Hidden Cultural Gems**
+Morning (9:00 AM - 12:00 PM) Start at Kampong Glam - explore the historic Malay quarter beyond the tourist spots.
+Visit the Malay Heritage Centre to understand Singapore's pre-colonial roots, wander through Haji Lane for authentic Malay crafts and vintage shops, and stop at Sultan Mosque during non-prayer hours.
+Afternoon (12:00 PM - 5:00 PM) Lunch at Zam Zam Restaurant (famous for murtabak since 1908), then explore the Peranakan Museum to learn about unique Straits Chinese culture.
+Walk through Armenian Street and visit the Armenian Church from 1835, browse antique shops on North Bridge Road for authentic artifacts. Evening (5:00 PM - 9:00 PM) Head to Clarke Quay for sunset river views, then dinner at Old Airport Road Food Centre.
+Try the Hainanese Chicken Rice, Char Kway Teow, and Laksa. 
 
-Evening (5:00 PM - 9:00 PM)
+**Day 2: Wartime Heritage & Local Neighborhoods** 
+Morning (9:00 AM - 1:00 PM) Visit Changi Chapel and Museum for Singapore's WWII history, explore Changi Village (a preserved kampong-style neighborhood), and take the Changi Point Coastal Walk for local fishing culture.
+Afternoon (1:00 PM - 6:00 PM) Lunch at Changi Village Hawker Centre, then take a bumboat to Pulau Ubin for a glimpse of 1960s Singapore. Rent bicycles and explore traditional kampong houses, visit Chek Jawa Wetlands for nature and heritage.
+Evening (6:00 PM - 9:00 PM) Return to mainland for dinner at Tiong Bahru Market - Singapore's oldest housing estate. Explore the Art Deco architecture of Tiong Bahru neighborhood.
+**Day 3: Traditional Crafts & Cultural Immersion** Morning (9:00 AM - 1:00 PM) Visit Thian Hock Keng Temple (Singapore's oldest Hokkien temple), explore Chinatown Heritage Centre in restored shophouses, watch traditional craftsmen at Eu Yan Sang Traditional Chinese Medicine Shop, and visit Buddha Tooth Relic Temple.
+Afternoon (1:00 PM - 6:00 PM) Lunch at Maxwell Food Centre (try the famous Tian Tian Hainanese Chicken Rice), participate in a Traditional Tea Ceremony at Tea Chapter, explore Tanjong Pagar conservation area with pre-war shophouses, and visit Red Dot Design Museum.
+Evening (6:00 PM - 10:00 PM) Fine dining at Burnt Ends (modern barbecue with local influences), then walk through Boat Quay for evening riverside ambiance.
+**Day 4: Off-the-Beaten-Path & Natural Heritage** 
+Morning (9:00 AM - 1:00 PM) Visit Lazarus Island by ferry (small crowds, pristine beaches), explore the island's natural heritage and former quarantine history. Pack a picnic lunch.
+Afternoon (1:00 PM - 5:00 PM) Return to mainland, visit Haw Par Villa (eccentric theme park showcasing Chinese mythology), explore Kent Ridge Park and Reflections at Bukit Chandu (WWII memorial).
+Evening (5:00 PM - 8:00 PM) Farewell dinner at Lau Pa Sat (Telok Ayer Market) - Victorian-era hawker center. Try satay and other local specialties, then take an evening stroll along Marina Bay.
+**Food Recommendations** Budget-Friendly: Old Airport Road Food Centre Try Hainanese Chicken Rice (Tian Tian), Char Kway Teow, Laksa, Rojak. Price range: SGD 3-8 per dish. Established in 1972, consistently rated by locals as the top hawker center. High-End: Burnt Ends Modern Australian barbecue with Southeast Asian influences. Price range: SGD 200-300 per person. Michelin-starred restaurant using local ingredients and traditional smoking techniques.
+**Practical Tips** Best visiting times: Museums 10 AM - 4 PM, hawker centers 11 AM - 2 PM or 6 PM - 8 PM, temples early morning or late afternoon, islands morning departure to avoid afternoon heat. Transportation: Purchase a Singapore Tourist Pass for unlimited public transport, use the efficient MRT system, and Grab for areas not well-served by public transport. This itinerary gives you authentic cultural immersion while avoiding overcrowded tourist traps. 
 
-Head to Clarke Quay for sunset river views
-Dinner at Old Airport Road Food Centre (Budget Option)
-Try: Hainanese Chicken Rice, Char Kway Teow, Laksa
-
-Day 2: Wartime Heritage & Local Neighborhoods
-Morning (9:00 AM - 1:00 PM)
-
-Visit Changi Chapel and Museum for Singapore's WWII history
-Explore Changi Village - a preserved kampong-style neighborhood
-Take the Changi Point Coastal Walk for local fishing culture
-
-Afternoon (1:00 PM - 6:00 PM)
-
-Lunch at Changi Village Hawker Centre
-Take a bumboat to Pulau Ubin for a glimpse of 1960s Singapore
-Rent bicycles and explore the island's traditional kampong houses
-Visit Chek Jawa Wetlands for nature and heritage
-
-Evening (6:00 PM - 9:00 PM)
-
-Return to mainland
-Dinner at Tiong Bahru Market - Singapore's oldest housing estate
-Explore the Art Deco architecture of Tiong Bahru neighborhood
-
-Day 3: Traditional Crafts & Cultural Immersion
-Morning (9:00 AM - 1:00 PM)
-
-Visit Thian Hock Keng Temple - Singapore's oldest Hokkien temple
-Explore Chinatown Heritage Centre in restored shophouses
-Watch traditional craftsmen at Eu Yan Sang Traditional Chinese Medicine Shop
-Visit Buddha Tooth Relic Temple for Buddhist culture
-
-Afternoon (1:00 PM - 6:00 PM)
-
-Lunch at Maxwell Food Centre (try the famous Tian Tian Hainanese Chicken Rice)
-Participate in a Traditional Tea Ceremony at Tea Chapter
-Explore Tanjong Pagar conservation area - pre-war shophouses
-Visit Red Dot Design Museum for contemporary Singaporean design
-
-Evening (6:00 PM - 10:00 PM)
-
-Fine dining at Burnt Ends (High-end Option) - Modern barbecue with local influences
-Walk through Boat Quay for evening riverside ambiance
-
-Day 4: Off-the-Beaten-Path & Natural Heritage
-Morning (9:00 AM - 1:00 PM)
-
-Visit Lazarus Island by ferry (small crowds, pristine beaches)
-Explore the island's natural heritage and former quarantine history
-Pack a picnic lunch
-
-Afternoon (1:00 PM - 5:00 PM)
-
-Return to mainland
-Visit Haw Par Villa - eccentric theme park showcasing Chinese mythology
-Explore Kent Ridge Park and Reflections at Bukit Chandu (WWII memorial)
-
-Evening (5:00 PM - 8:00 PM)
-
-Farewell dinner at Lau Pa Sat (Telok Ayer Market) - Victorian-era hawker center
-Try satay and other local specialties
-Evening stroll along Marina Bay for city skyline views
-
-Food Recommendations
-Budget-Friendly Option: Old Airport Road Food Centre
-
-What to try: Hainanese Chicken Rice (Tian Tian), Char Kway Teow, Laksa, Rojak
-Price range: SGD 3-8 per dish
-Why authentic: Established in 1972, consistently rated by locals as top hawker center
-
-High-End Option: Burnt Ends
-
-Cuisine: Modern Australian barbecue with Southeast Asian influences
-Price range: SGD 200-300 per person
-Why special: Uses local ingredients and traditional smoking techniques, Michelin-starred
-
-Practical Tips
-Best Times to Visit Locations:
-
-Museums: 10 AM - 4 PM (avoid weekend crowds)
-Hawker centers: 11 AM - 2 PM or 6 PM - 8 PM
-Temples: Early morning or late afternoon
-Islands: Morning departure to avoid afternoon heat
-
-Transportation:
-
-Purchase a Singapore Tourist Pass for unlimited public transport
-Use the MRT (subway) system - efficient and connects all major areas
-Grab (ride-hailing) for areas not well-served by public transport
-
-Cultural Etiquette:
-
-Remove shoes when entering temples and heritage houses
-Dress modestly when visiting religious sites
-Ask permission before photographing people
-Return trays and utensils after eating at hawker centers (mandatory)
-
-Opening Hours Note:
-All recommended locations are open during suggested visiting hours. Museums typically open 10 AM - 6 PM, hawker centers operate 10 AM - 10 PM, and temples welcome visitors dawn to dusk.
-This itinerary provides an authentic cultural immersion while avoiding overcrowded tourist traps, giving you genuine insights into Singapore's multicultural heritage and local way of life.
+Would you like me to help you book flights for your March trip?
 """
 
 
@@ -209,41 +113,30 @@ async def create_voyaige_agent(tools):
 	)
 	llm_with_tools = llm.bind_tools(tools)
 
-	def planning_node(state: State):
-		"""Plan a trip to Singapore"""
-		message_history = state.get("messages")
-		planning_prompt = """draft a vacation plan for a couple visiting singapore for 4 days and 3 nights. Offer a offbeat, cultural and exploratory itinerary which would give them a true sense of Singapore.
-scoure the net and get a plan which has recommendations from authentic sources.
-give them a list of good places to eat to taste the local food - 1 of which is cheap and 1 costly.
-choose a suitable month and time.
-ensure the itinerary is adjusted to traffic of people visiting certain locations and that every location is open at that time
-choose a suitable time period and give me a day by day plan
-
-Do not offer to do anything else once you generate the itinerary"""
-		message_history = [*message_history, SystemMessage(content=planning_prompt)]
-		response = llm.ainvoke(message_history)
-		message_history = [*message_history, response, AIMessage(content="Would you like me to book the flights?")]
-		return {"messages": message_history}
-
 	async def chatbot(state: State):
 		"""The 'agent' node. It calls the model with the current state."""
-		response = await llm_with_tools.ainvoke(state["messages"])
+		messages = state["messages"]
+		response = await llm_with_tools.ainvoke(messages)
+
 		return {"messages": [response]}
 
 	graph_builder = StateGraph(State)
 	tool_node = ToolNode(tools=tools)
-	graph_builder.add_node("planning", planning_node)
 	graph_builder.add_node("chatbot", chatbot)
 	graph_builder.add_node("tools", tool_node)
 
-	graph_builder.add_edge(START, "planning")
-	graph_builder.add_edge("planning", "chatbot")
+	graph_builder.add_edge(START, "chatbot")
 	graph_builder.add_conditional_edges(
 		"chatbot",
 		tools_condition,
 	)
 	graph_builder.add_edge("tools", "chatbot")
-	return graph_builder.compile()
+
+	agent = graph_builder.compile()
+	with open("graph_visualisation.png", "wb") as f:
+		f.write(agent.get_graph().draw_mermaid_png())
+
+	return agent
 
 
 async def process_message(current_state: State) -> str:
@@ -263,7 +156,7 @@ async def process_message(current_state: State) -> str:
 			},
 		)
 		mcp_tools = await client.get_tools()
-		agent = await create_voyaige_agent([*mcp_tools, trip_planning])
+		agent = await create_voyaige_agent([*mcp_tools, planning_tool])
 
 		events = agent.astream(
 			current_state,

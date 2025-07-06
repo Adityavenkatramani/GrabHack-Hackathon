@@ -32,19 +32,21 @@ async def chat():
 	logger.info(f"User message: {user_message}")
 	logger.info(f"Customer name: {customer_name}")
 
-	if customer_name not in agents_cache:
-		current_state = {
+	# If user has no history or has cleared their chat, initialize a new one.
+	if customer_name not in agents_cache or not agents_cache[customer_name].get("messages"):
+		agents_cache[customer_name] = {
 			"messages": [
 				HumanMessage(content=user_message),
 				SystemMessage(
 					content=SYSTEM_PROMPT + f"\n\nThe customer's full name is {customer_name}.",
 				),
 			],
+			"planning_over": False,
 		}
 	else:
-		current_state = agents_cache[customer_name]
-		current_state["messages"].append(HumanMessage(content=user_message))
+		agents_cache[customer_name]["messages"].append(HumanMessage(content=user_message))
 
+	current_state = agents_cache[customer_name]
 	last_state = await process_message(current_state)
 	agents_cache[customer_name] = last_state
 	response_message = last_state["messages"][-1].content
@@ -58,6 +60,7 @@ def clear():
 <<<<<<< Updated upstream
 	data = request.get_json()
 	customer_name = data.get("customer_name")
+<<<<<<< Updated upstream
 	agents_cache.pop(customer_name)
 	return jsonify({"message": "Cache cleared"})
 =======
@@ -97,6 +100,11 @@ def payment_complete():
         }
     
     return jsonify({"message": "Payment completion recorded"})
+>>>>>>> Stashed changes
+=======
+	if customer_name in agents_cache:
+		agents_cache[customer_name]["messages"] = []
+	return jsonify({"message": "Cache cleared for user"})
 >>>>>>> Stashed changes
 
 
