@@ -46,6 +46,11 @@ export default function ChatPage() {
 
   const handleShowGrabPayPopup = () => setShowGrabPayPopup(true);
 
+  const handlePaymentComplete = () => {
+    // This will be handled by the Chatbot component
+    console.log("Payment completed - message will be added to chat");
+  };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-br from-green-50 to-white px-4 py-8 gap-8">
       {/* Left: Info/Features */}
@@ -85,9 +90,18 @@ export default function ChatPage() {
       </div>
       {/* Right: Chatbot */}
       <div className="flex-1 flex items-center justify-center w-full max-w-4xl">
-        <Chatbot initialInput={sendExample} onShowGrabPay={handleShowGrabPayPopup} userIcon={<IconUser className="w-8 h-8 text-green-400 bg-green-100 rounded-full p-1 border border-green-200" />} />
+        <Chatbot 
+          initialInput={sendExample} 
+          onShowGrabPay={handleShowGrabPayPopup} 
+          onPaymentComplete={handlePaymentComplete}
+          userIcon={<IconUser className="w-8 h-8 text-green-400 bg-green-100 rounded-full p-1 border border-green-200" />} 
+        />
       </div>
-      <GrabPayPopup open={showGrabPayPopup} onClose={() => setShowGrabPayPopup(false)} />
+      <GrabPayPopup 
+        open={showGrabPayPopup} 
+        onClose={() => setShowGrabPayPopup(false)} 
+        onPaymentComplete={handlePaymentComplete}
+      />
     </div>
   );
 } 

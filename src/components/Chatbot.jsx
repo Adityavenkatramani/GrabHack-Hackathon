@@ -5,7 +5,7 @@ const BOT_AVATAR = "/GrabVoyaige_logo1.png";
 const USER_AVATAR =
   "https://ui-avatars.com/api/?name=You&background=34d399&color=fff&rounded=true";
 
-export default function Chatbot({ onShowGrabPay, messages: propMessages, disableInput, userIcon }) {
+export default function Chatbot({ onShowGrabPay, messages: propMessages, disableInput, userIcon, onPaymentComplete }) {
   const [messages, setMessages] = useState(propMessages || [
     { from: "bot", text: "Hi! I'm Columbus, your customer service rep here at VoyAIge. I'm here to help you take care of the boring tasks of your vacation planning, right from booking your flights and taxis to taking care of your payments. What can I help you with today?" },
   ]);
@@ -103,6 +103,35 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
     }
   };
 
+  // Handle payment completion
+  const handlePaymentComplete = async () => {
+    try {
+      // Get user name from localStorage
+      const userName = localStorage.getItem('userName') || 'User';
+      
+      // Send a message to get the payment completion response from LangGraph
+      const response = await fetch("http://127.0.0.1:5050/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          message: "payment_completed",
+          user_name: userName
+        })
+      });
+
+      const data = await response.json();
+
+      if (!propMessages) {
+        setMessages(prevMessages => [
+          ...prevMessages,
+          { from: "bot", text: data.reply }
+        ]);
+      }
+    } catch (error) {
+      console.error("Error getting payment completion message:", error);
+    }
+  };
+
   // Handle click on GrabPay link in bot reply
   const handleBotMessageClick = (e) => {
     if (e.target.classList.contains("grabpay-link")) {
@@ -110,6 +139,14 @@ export default function Chatbot({ onShowGrabPay, messages: propMessages, disable
       if (onShowGrabPay) onShowGrabPay();
     }
   };
+
+  // Override the onPaymentComplete callback to use our local handler
+  useEffect(() => {
+    if (onPaymentComplete) {
+      // Replace the callback with our local handler
+      onPaymentComplete = handlePaymentComplete;
+    }
+  }, [onPaymentComplete]);
 
   return (
     <div className="w-full max-w-4xl min-w-[28rem] h-[44rem] bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl flex flex-col border-2 border-green-200 min-h-0">

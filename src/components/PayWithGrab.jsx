@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function PayWithGrab({ open, onClose, totalAmount }) {
+export default function PayWithGrab({ open, onClose, totalAmount, onPaymentComplete }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -13,11 +13,36 @@ export default function PayWithGrab({ open, onClose, totalAmount }) {
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-        onClose();
-      }, 1500);
     }, 2000);
+  };
+
+  const handleDone = async () => {
+    try {
+      // Get user name from localStorage
+      const userName = localStorage.getItem('userName') || 'User';
+      
+      // Send POST request to notify payment completion
+      await fetch("http://127.0.0.1:5050/payment-complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          user_name: userName,
+          amount: totalAmount
+        })
+      });
+
+      // Call the callback to add message to chat
+      if (onPaymentComplete) {
+        onPaymentComplete();
+      }
+
+      // Close the popup
+      onClose();
+    } catch (error) {
+      console.error("Error notifying payment completion:", error);
+      // Still close the popup even if the request fails
+      onClose();
+    }
   };
 
   if (!open) return null;
@@ -45,6 +70,12 @@ export default function PayWithGrab({ open, onClose, totalAmount }) {
               </svg>
             </div>
             <div className="text-lg font-bold text-green-700">Payment is done!</div>
+            <button
+              className="bg-green-600 text-white px-8 py-3 rounded-full shadow-lg hover:bg-green-700 transition text-lg font-semibold mt-4"
+              onClick={handleDone}
+            >
+              Done
+            </button>
           </div>
         ) : (
           <>

@@ -22,7 +22,7 @@ const paymentOptions = [
   }
 ];
 
-export default function GrabPayPopup({ open, onClose }) {
+export default function GrabPayPopup({ open, onClose, onPaymentComplete }) {
   const [selected, setSelected] = useState("grabpay");
   const [showGrabPay, setShowGrabPay] = useState(false);
   const [otherMsg, setOtherMsg] = useState("");
@@ -83,7 +83,12 @@ export default function GrabPayPopup({ open, onClose }) {
           `}</style>
         </div>
       )}
-      <PayWithGrab open={showGrabPay} onClose={() => { setShowGrabPay(false); onClose(); }} totalAmount={199.99} />
+      <PayWithGrab 
+        open={showGrabPay} 
+        onClose={() => { setShowGrabPay(false); onClose(); }} 
+        totalAmount={199.99} 
+        onPaymentComplete={onPaymentComplete}
+      />
     </>
   );
 } 
