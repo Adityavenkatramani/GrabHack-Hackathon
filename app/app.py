@@ -57,55 +57,24 @@ async def chat():
 
 @app.route("/clear", methods=["POST"])
 def clear():
-<<<<<<< Updated upstream
 	data = request.get_json()
 	customer_name = data.get("customer_name")
-<<<<<<< Updated upstream
-	agents_cache.pop(customer_name)
-	return jsonify({"message": "Cache cleared"})
-=======
-    data = request.get_json()
-    customer_name = data.get("customer_name")
-    agents_cache.pop(customer_name)
-    return jsonify({"message": "Cache cleared"})
-@app.route("/clear", methods=["POST"])
-def clear():
-    data = request.get_json()
-    customer_name = data.get("customer_name")
-    agents_cache.pop(customer_name)
-    return jsonify({"message": "Cache cleared"})
-
-
-@app.route("/payment-complete", methods=["POST"])
-def payment_complete():
-    data = request.get_json()
-    user_name = data.get("user_name", "User")
-    amount = data.get("amount", 0)
-    
-    logger.info(f"Payment completed for {user_name} - Amount: ${amount}")
-    
-
-    if user_name not in agents_cache:
-        agents_cache[user_name] = {
-            "messages": [],
-            "last_payment": {
-                "amount": amount,
-                "completed": True
-            }
-        }
-    else:
-        agents_cache[user_name]["last_payment"] = {
-            "amount": amount,
-            "completed": True
-        }
-    
-    return jsonify({"message": "Payment completion recorded"})
->>>>>>> Stashed changes
-=======
 	if customer_name in agents_cache:
 		agents_cache[customer_name]["messages"] = []
 	return jsonify({"message": "Cache cleared for user"})
->>>>>>> Stashed changes
+
+
+@app.route("/payment-complete", methods=["POST"])
+async def payment_complete():
+	data = request.get_json()
+	customer_name = data.get(
+		"user_name",
+		"User",
+	)  # Get user name from frontend, default to "User"
+
+	logger.info(f"Customer name: {customer_name}")
+
+	return jsonify({"message": "Payment received. Go GRAB your vacation now!"})
 
 
 if __name__ == "__main__":
