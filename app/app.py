@@ -17,49 +17,49 @@ agents_cache = {}
 
 @app.route("/")
 def home():
-    return "Hello, World!"
+	return "Hello, World!"
 
 
 @app.route("/chat", methods=["POST"])
 async def chat():
-    data = request.get_json()
-    user_message = data.get("message")
-    customer_name = data.get(
-        "user_name", "User"
-    )  # Get user name from frontend, default to "User"
+	data = request.get_json()
+	user_message = data.get("message")
+	customer_name = data.get(
+		"user_name",
+		"User",
+	)  # Get user name from frontend, default to "User"
 
-    logger.info(f"User message: {user_message}")
-    logger.info(f"Customer name: {customer_name}")
+	logger.info(f"User message: {user_message}")
+	logger.info(f"Customer name: {customer_name}")
 
-    if customer_name not in agents_cache:
-        current_state = {
-            "messages": [
-                HumanMessage(content=user_message),
-                SystemMessage(
-                    content=SYSTEM_PROMPT
-                    + f"\n\nThe customer's full name is {customer_name}."
-                ),
-            ]
-        }
-    else:
-        current_state = agents_cache[customer_name]
-        current_state["messages"].append(HumanMessage(content=user_message))
+	if customer_name not in agents_cache:
+		current_state = {
+			"messages": [
+				HumanMessage(content=user_message),
+				SystemMessage(
+					content=SYSTEM_PROMPT + f"\n\nThe customer's full name is {customer_name}.",
+				),
+			],
+		}
+	else:
+		current_state = agents_cache[customer_name]
+		current_state["messages"].append(HumanMessage(content=user_message))
 
-    last_state = await process_message(current_state)
-    agents_cache[customer_name] = last_state
-    response_message = last_state["messages"][-1].content
-    logger.info(f"Response message: {response_message}")
+	last_state = await process_message(current_state)
+	agents_cache[customer_name] = last_state
+	response_message = last_state["messages"][-1].content
+	logger.info(f"Response message: {response_message}")
 
-    return jsonify({"reply": response_message})
+	return jsonify({"reply": response_message})
 
 
 @app.route("/clear", methods=["POST"])
 def clear():
-    data = request.get_json()
-    customer_name = data.get("customer_name")
-    agents_cache.pop(customer_name)
-    return jsonify({"message": "Cache cleared"})
+	data = request.get_json()
+	customer_name = data.get("customer_name")
+	agents_cache.pop(customer_name)
+	return jsonify({"message": "Cache cleared"})
 
 
 if __name__ == "__main__":
-    app.run(port=5050)
+	app.run(port=5050)

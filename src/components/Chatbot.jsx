@@ -7,7 +7,7 @@ const USER_AVATAR =
 
 export default function Chatbot({ onShowGrabPay, messages: propMessages, disableInput, userIcon }) {
   const [messages, setMessages] = useState(propMessages || [
-    { from: "bot", text: "Hi! How can I help you today?" },
+    { from: "bot", text: "Hi! I'm Columbus, your customer service rep here at VoyAIge. I'm here to help you take care of the boring tasks of your vacation planning, right from booking your flights and taxis to taking care of your payments. What can I help you with today?" },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
